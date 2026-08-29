@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import connectDB from './config/db.js'
 import healthRoutes from './routes/healthRoutes.js'
+import complaintRoutes from './routes/complaintRoutes.js'
 
 dotenv.config()
 
@@ -13,6 +14,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/api', healthRoutes)
+app.use('/api/complaints', complaintRoutes)
 
 const startServer = async () => {
   try {
