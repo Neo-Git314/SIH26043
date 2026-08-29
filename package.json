@@ -1,0 +1,20 @@
+{
+  "name": "sih26043",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "test": "echo \"No root-level tests configured\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/Neo-Git314/SIH26043"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
