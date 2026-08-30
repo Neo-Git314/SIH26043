@@ -1,0 +1,262 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>University Project Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-secondary-container": "#3f5881",
+                        "on-primary-container": "#fffbff",
+                        "primary-fixed": "#ffdbd0",
+                        "surface-container-high": "#e7e8e9",
+                        "on-surface": "#191c1d",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#852400",
+                        "on-primary-fixed": "#3a0b00",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#d6e3ff",
+                        "surface-variant": "#e1e3e4",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "inverse-primary": "#ffb59e",
+                        "on-secondary-fixed-variant": "#2d476f",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#aec7f6",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-container": "#66768d",
+                        "surface-tint": "#ae3200",
+                        "surface": "#f8f9fa",
+                        "inverse-surface": "#2e3132",
+                        "outline-variant": "#e6beb2",
+                        "secondary": "#465f88",
+                        "surface-container-highest": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "tertiary": "#4d5d73",
+                        "surface-container-low": "#f3f4f5",
+                        "primary-container": "#d43f00",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "primary": "#aa3000",
+                        "outline": "#916f65",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#5c4037",
+                        "secondary-container": "#b6d0ff",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-background": "#191c1d",
+                        "on-tertiary-container": "#fdfcff",
+                        "on-secondary-fixed": "#001b3d",
+                        "primary-fixed-dim": "#ffb59e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "margin-desktop": "64px",
+                        "stack-lg": "32px",
+                        "base": "4px",
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-shadow { box-shadow: 0px 4px 12px rgba(0, 33, 71, 0.05); }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-on-secondary-fixed shadow-md docked full-width top-0 z-50">
+<div class="flex justify-between items-center w-full px-margin-desktop py-4 max-w-[1280px] mx-auto">
+<div class="font-headline-md text-headline-md font-bold text-inverse-on-surface">Samadhan Setu</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-inverse-on-surface font-body-md hover:text-primary-fixed transition-colors duration-200" href="#">Civic Issues</a>
+<a class="text-inverse-on-surface font-body-md hover:text-primary-fixed transition-colors duration-200" href="#">My Complaints</a>
+<a class="text-inverse-on-surface font-body-md hover:text-primary-fixed transition-colors duration-200" href="#">University Challenges</a>
+<a class="text-primary font-label-bold border-b-2 border-primary pb-1 hover:text-primary-fixed transition-colors duration-200" href="#">Research Projects</a>
+</nav>
+<div class="flex items-center gap-gutter">
+<div class="relative hidden lg:block text-inverse-on-surface">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-inverse-on-surface">search</span>
+<input class="bg-on-secondary-fixed-variant text-inverse-on-surface border-none rounded-full pl-10 pr-4 py-2 focus:ring-2 focus:ring-primary outline-none font-body-md" placeholder="Search..." type="text">
+</div>
+<button class="bg-primary text-on-primary font-label-bold rounded px-4 py-2 hover:bg-primary-container transition-colors scale-95 active:opacity-80 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span> Report an Issue
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-[1280px] mx-auto px-margin-desktop py-stack-lg flex flex-col gap-stack-lg">
+<!-- Header Section -->
+<div class="flex justify-between items-end border-b border-surface-variant pb-stack-md">
+<div>
+<span class="text-primary font-label-bold uppercase tracking-wider mb-2 block">Management View</span>
+<h1 class="font-headline-xl text-headline-xl text-on-secondary-fixed">Project Workspace: Smart Traffic Management</h1>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 border border-on-secondary-fixed text-on-secondary-fixed font-label-bold rounded hover:bg-surface-container-low transition-colors">View Report</button>
+<button class="px-6 py-3 bg-primary text-on-primary font-label-bold rounded hover:bg-primary-container transition-colors">Edit Details</button>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Milestones (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest rounded-lg border border-surface-variant custom-shadow p-stack-md relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="flex justify-between items-center mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-secondary-fixed">Milestone Tracker</h2>
+<span class="material-symbols-outlined text-primary bg-primary-fixed rounded-full p-1 border border-primary">flag</span>
+</div>
+<div class="relative pl-4 border-l-2 border-surface-variant flex flex-col gap-6 mt-4">
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-surface-container-lowest"></div>
+<h3 class="font-label-bold text-on-secondary-fixed">Initial Data Collection</h3>
+<p class="font-body-md text-tertiary-container mt-1">Completed: Oct 12, 2024</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-primary ring-4 ring-surface-container-lowest"></div>
+<h3 class="font-label-bold text-on-secondary-fixed">Algorithm Prototyping</h3>
+<p class="font-body-md text-tertiary-container mt-1">Completed: Nov 05, 2024</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-3 h-3 rounded-full border-2 border-primary bg-surface-container-lowest ring-4 ring-surface-container-lowest"></div>
+<h3 class="font-label-bold text-on-secondary-fixed">Simulated Testing Phase</h3>
+<p class="font-body-md text-primary mt-1">In Progress - Due Dec 01</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[23px] top-1 w-3 h-3 rounded-full bg-surface-variant ring-4 ring-surface-container-lowest"></div>
+<h3 class="font-label-bold text-surface-variant">City Integration Pilot</h3>
+<p class="font-body-md text-surface-variant mt-1">Pending - Q1 2025</p>
+</div>
+</div>
+<button class="w-full mt-stack-lg py-3 border border-on-secondary-fixed text-on-secondary-fixed font-label-bold rounded hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span> Add New Milestone
+                    </button>
+</div>
+</div>
+<!-- Middle Column: Team (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest rounded-lg border border-surface-variant custom-shadow p-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-secondary-fixed mb-stack-md">Team Module</h2>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4 p-3 rounded hover:bg-surface-container-low transition-colors">
+<img class="w-12 h-12 rounded-full object-cover border border-surface-variant" data-alt="A professional headshot of a middle-aged female professor with short dark hair, wearing glasses and a navy blazer. Soft studio lighting, bright white background, conveying academic authority and modern professionalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDs4MdC5y2NUZGIhh08Xz8RamOioXO0_qZCH8of3ZEPhY6jAnqNW5nB-FBIikr2LDkFna4bnu8Bh7-gyUHHVXRfHrYn5Cs9EGCayJxsAr9IGy7UqRhhkPn0nieop8XfXZblOsm6PDYpvWLJndU9mBTYu3SqX4low_E4k5tocKKX1mnWeLpyKu7gubyowoLgiZpLPibOZmjFkEFpdOiJ-NKT1fTQcNVUt1FFJBNpX7iF9F5kAFE2pr_hvw">
+<div>
+<h4 class="font-label-bold text-on-secondary-fixed">Dr. Elena Rostova</h4>
+<p class="font-label-sm text-tertiary-container">Faculty Lead / PI</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded hover:bg-surface-container-low transition-colors">
+<img class="w-12 h-12 rounded-full object-cover border border-surface-variant" data-alt="A professional headshot of a young male university student with curly brown hair, wearing a casual gray sweater. Warm, natural lighting, bright white background, conveying approachability and modern academic engagement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3oY6Go0zyQXvGeuk8BihJ30ueDo_VSufd6w22TTngqLv9zDP-VpHUV5CioSoOiOohhmZRASXwd2EVoxuQ_3IoBNyXPqKpPTWEXXTqXEqVr13vMoftLkuyJ2i31T9dCgOVSCun-ZocSCUlYcmbC5S8OAv6JyH33wk2LPsBBsAwpi_HmmjvKwXweLzKIzRQClSfXHjUk0Cwl11xSMm4emUIKHs6lo9Bd31xUx4tdwyzapovarQsxnQy_w">
+<div>
+<h4 class="font-label-bold text-on-secondary-fixed">Marcus Chen</h4>
+<p class="font-label-sm text-tertiary-container">Graduate Student / Data Analyst</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded hover:bg-surface-container-low transition-colors">
+<img class="w-12 h-12 rounded-full object-cover border border-surface-variant" data-alt="A professional headshot of a young female university student with long blonde hair tied back, wearing a light blue button-down shirt. Clean, bright studio lighting, conveying focus and modern academic professionalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfe0Gbc9w04R5VR24iJs7yvdd7JYVBhaE2fpecXbTe0NihVIapbqZmk_LCepwrqN4sH52N0rvL6Jv2FFgDYdj6j1YLxDWLUHaEK8pFMInG6tApXeT7wAMJieB1ALJZIfXS3WcL6rjgHTFfb-RV7qHr0PJk_MybNUhcgfVD3vBCwdmZPoWRgvafNAO4ZjMV0FVYrfsuXOsCux_Gcbd9IDc8jS7E5CnkwQtzw9LwxIgp1bCbIu9E57Np4Q">
+<div>
+<h4 class="font-label-bold text-on-secondary-fixed">Sarah Jenkins</h4>
+<p class="font-label-sm text-tertiary-container">Undergrad Student / Field Researcher</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 rounded hover:bg-surface-container-low transition-colors">
+<img class="w-12 h-12 rounded-full object-cover border border-surface-variant" data-alt="A professional headshot of a young male professional with short black hair and a neat beard, wearing a dark navy polo shirt. Modern corporate studio lighting, bright white background, conveying technical expertise and reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeL09r8h-c0UqYcmlHXULYOs3SGnsfzGRZS8hn2BgyAwDI-LTHnUu7sC3M1k6-CuytBz9rSqfKfUwtgqqqluAeBNe2R79vlYor8mZkbhqGIwGBSglujNEPFADfpmnTVhd9N2n96T33VuUQeHAUYN4U6U3OG2fDrxS7RC_lASZF_K7fzImmcBozyoMiuNz6jsxyFUTP_lFhEcpCkRfneN-3khqKvKUm1OLr3rkJHi4Vk5EGawQ4FBOHXA">
+<div>
+<h4 class="font-label-bold text-on-secondary-fixed">David Okafor</h4>
+<p class="font-label-sm text-tertiary-container">Graduate Student / Systems Engineer</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Industry Partner (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<div class="bg-surface-container-lowest rounded-lg border border-surface-variant custom-shadow p-stack-md h-full flex flex-col">
+<h2 class="font-headline-md text-headline-md text-on-secondary-fixed mb-2">Collaborate with Industry</h2>
+<p class="font-body-md text-tertiary-container mb-stack-md">Connect this project with verified civic tech partners.</p>
+<div class="mt-auto flex flex-col gap-4">
+<div class="relative">
+<label class="font-label-bold text-on-secondary-fixed block mb-1">Partner Selection</label>
+<select class="w-full bg-surface-container-lowest border border-surface-variant text-on-background font-body-md rounded p-3 focus:ring-2 focus:ring-on-secondary-fixed focus:border-on-secondary-fixed outline-none appearance-none">
+<option>Select a verified partner...</option>
+<option>MobilityTech Solutions</option>
+<option>Civic Data Grid Corp</option>
+<option>Metro Transit Authority</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-[38px] text-tertiary-container pointer-events-none">expand_more</span>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary font-label-bold rounded hover:bg-primary-container transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">send</span> Invite Partner
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-on-secondary-fixed mt-auto border-t border-on-secondary-fixed-variant full-width">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-stack-lg w-full max-w-[1280px] mx-auto">
+<div>
+<h3 class="font-headline-md text-headline-md font-bold text-inverse-on-surface mb-4">Samadhan Setu</h3>
+<p class="font-body-md text-inverse-on-surface opacity-90 hover:opacity-100 transition-opacity">© 2024 Societal Innovation Collaboration Portal. All rights reserved.</p>
+</div>
+<div class="flex flex-col gap-2">
+<a class="font-body-md text-inverse-on-surface hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">About Portal</a>
+<a class="font-body-md text-inverse-on-surface hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">Government Services</a>
+</div>
+<div class="flex flex-col gap-2">
+<a class="font-body-md text-inverse-on-surface hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">University Partners</a>
+<a class="font-body-md text-inverse-on-surface hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">Contact Support</a>
+</div>
+<div>
+<!-- Empty col for layout balance -->
+</div>
+</div>
+</footer>
+
+
+</body></html>
