@@ -1,0 +1,241 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Submit a New Civic Issue - Innovation Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-secondary-container": "#3f5881",
+                        "on-primary-container": "#fffbff",
+                        "primary-fixed": "#ffdbd0",
+                        "surface-container-high": "#e7e8e9",
+                        "on-surface": "#191c1d",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#852400",
+                        "on-primary-fixed": "#3a0b00",
+                        "on-error-container": "#93000a",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#d6e3ff",
+                        "surface-variant": "#e1e3e4",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "inverse-primary": "#ffb59e",
+                        "on-secondary-fixed-variant": "#2d476f",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#aec7f6",
+                        "surface-dim": "#d9dadb",
+                        "tertiary-container": "#66768d",
+                        "surface-tint": "#ae3200",
+                        "surface": "#f8f9fa",
+                        "inverse-surface": "#2e3132",
+                        "outline-variant": "#e6beb2",
+                        "secondary": "#465f88",
+                        "surface-container-highest": "#e1e3e4",
+                        "background": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "tertiary": "#4d5d73",
+                        "surface-container-low": "#f3f4f5",
+                        "primary-container": "#d43f00",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "primary": "#aa3000",
+                        "outline": "#916f65",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#5c4037",
+                        "secondary-container": "#b6d0ff",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-background": "#191c1d",
+                        "on-tertiary-container": "#fdfcff",
+                        "on-secondary-fixed": "#001b3d",
+                        "primary-fixed-dim": "#ffb59e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "margin-desktop": "64px",
+                        "stack-lg": "32px",
+                        "base": "4px",
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "label-bold": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .custom-shadow { box-shadow: 0px 4px 12px rgba(0, 33, 71, 0.05); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-on-secondary-fixed dark:bg-on-secondary-fixed w-full docked full-width top-0 bg-on-secondary-fixed shadow-md z-50">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-4 max-w-[1280px] mx-auto">
+<div class="flex items-center gap-gutter">
+<div class="font-headline-md text-headline-md font-bold text-inverse-on-surface">Samadhan Setu</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-inverse-on-surface font-body-md hover:text-primary-fixed transition-colors duration-200" href="#">Civic Issues</a>
+<a class="text-primary font-label-bold border-b-2 border-primary pb-1 hover:text-primary-fixed transition-colors duration-200" href="#">My Complaints</a>
+<a class="text-inverse-on-surface font-body-md hover:text-primary-fixed transition-colors duration-200" href="#">University Challenges</a>
+<a class="text-inverse-on-surface font-body-md hover:text-primary-fixed transition-colors duration-200" href="#">Research Projects</a>
+</nav>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-tertiary-fixed-variant" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-DEFAULT border-none focus:ring-2 focus:ring-primary text-body-md w-64" placeholder="Search..." type="text">
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-DEFAULT font-label-bold scale-95 active:opacity-80 transition-all hover:bg-primary-container">
+                    Report an Issue
+                </button>
+<button class="md:hidden text-inverse-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+<!-- Header -->
+<div class="mb-stack-lg border-b border-surface-variant pb-stack-md">
+<h1 class="font-headline-xl text-headline-xl text-on-secondary-fixed mb-stack-sm">Submit a New Civic Issue</h1>
+<p class="font-body-lg text-body-lg text-tertiary">Please provide detailed information to help us address the issue efficiently.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
+<!-- Form Section -->
+<div class="lg:col-span-7 space-y-stack-md">
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl custom-shadow border-t-4 border-t-primary border border-surface-variant">
+<form class="space-y-stack-md">
+<!-- Title -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm" for="title">Issue Title</label>
+<input class="w-full bg-surface-container-lowest border border-surface-variant rounded-DEFAULT px-4 py-3 text-body-md focus:border-on-secondary-fixed focus:ring-1 focus:ring-on-secondary-fixed transition-colors" id="title" placeholder="Brief summary of the issue" type="text">
+</div>
+<!-- District -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm" for="district">District / Ward</label>
+<select class="w-full bg-surface-container-lowest border border-surface-variant rounded-DEFAULT px-4 py-3 text-body-md focus:border-on-secondary-fixed focus:ring-1 focus:ring-on-secondary-fixed transition-colors appearance-none" id="district">
+<option disabled="" selected="" value="">Select the affected district</option>
+<option value="d1">District 1 - Downtown</option>
+<option value="d2">District 2 - Northside</option>
+<option value="d3">District 3 - East End</option>
+<option value="d4">District 4 - West Valley</option>
+</select>
+</div>
+<!-- Description -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm" for="description">Detailed Description</label>
+<textarea class="w-full bg-surface-container-lowest border border-surface-variant rounded-DEFAULT px-4 py-3 text-body-md focus:border-on-secondary-fixed focus:ring-1 focus:ring-on-secondary-fixed transition-colors resize-y" id="description" placeholder="Describe the issue, including specific location details, duration, and any hazards..." rows="5"></textarea>
+</div>
+<!-- Upload Zone -->
+<div>
+<label class="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm">Supporting Media</label>
+<div class="border-2 border-dashed border-primary bg-primary-fixed-dim/20 rounded-xl p-stack-lg text-center cursor-pointer hover:bg-primary-fixed-dim/30 transition-colors">
+<span class="material-symbols-outlined text-primary text-4xl mb-stack-sm block" style="font-variation-settings: 'FILL' 0;">cloud_upload</span>
+<p class="font-label-bold text-label-bold text-on-secondary-fixed">Drag &amp; Drop files here</p>
+<p class="text-label-sm text-tertiary mt-1">or click to browse (Max 5MB per file)</p>
+</div>
+<!-- Thumbnails -->
+<div class="flex gap-stack-sm mt-stack-md overflow-x-auto pb-2">
+<div class="relative w-24 h-24 rounded-lg overflow-hidden border border-surface-variant group flex-shrink-0">
+<div class="bg-cover bg-center w-full h-full" data-alt="A close up photo of a large pothole on an asphalt street, showing crumbling edges and exposed gravel underneath, taken during daytime under bright, clear lighting to highlight the structural damage for a civic repair request. Professional, realistic documentary style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAR1cdcHieYaSAwgARlNTRkvt5BarXEJh05z0bPDXGem-giU-vAaybM5kb8eytTVdcvbspeqi0w_vlQXMuGVvRE6uBuCoKHdzHTBLY8qunUffXYZtBTi4YZGD6hTU9-frGeL8Vtp71gOkb3xGPMpOpJSxFg3Pbf72UMxk7yykF7ww3hqX-QrwMpJS34oe_5v4KC3tL8b62CR3XlsaT6qOrFZzv0haeaqmI5e8OPMLXE9cPSgQapd-d7aA')"></div>
+<button class="absolute top-1 right-1 bg-surface-container-lowest rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity" type="button">
+<span class="material-symbols-outlined text-error text-[16px]" style="font-variation-settings: 'FILL' 1;">close</span>
+</button>
+</div>
+<div class="relative w-24 h-24 rounded-lg overflow-hidden border border-surface-variant group flex-shrink-0">
+<div class="bg-cover bg-center w-full h-full" data-alt="A photograph of a broken streetlight pole bent at an awkward angle near a residential sidewalk. The surrounding area includes green trees and a clear blue sky, emphasizing the disruption to neighborhood infrastructure. High quality, clear, documentary civic photography style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBRx6FMHN_2VGmyuPzXm3Oby8d8zkdINFfgyqJmXXTy_dGD6JsOf8fAM5ytOrL4gc0EApGOqHi-JAgBpClnG1GO-zOFqsddNT-lqSIrxhJq8wHUXW-b9mPpXoTjYYXKkHPsKlDvozArV7U7tWnSdBGAapoii62WzjcdZ48nLPP-EjR4Z6rwsqQq0D-UwUi26XIygDomzrWrJAPVAfYHszfpYJszthVcC7D2L13bcHZBLYR4Sxh4K-LHCw')"></div>
+<button class="absolute top-1 right-1 bg-surface-container-lowest rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity" type="button">
+<span class="material-symbols-outlined text-error text-[16px]" style="font-variation-settings: 'FILL' 1;">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- CTA -->
+<div class="pt-stack-md">
+<button class="w-full bg-primary text-on-primary py-4 rounded-xl font-headline-md text-headline-md shadow-md hover:bg-primary-container transition-colors active:scale-[0.98]" type="submit">
+                                Submit Complaint
+                            </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Map Section -->
+<div class="lg:col-span-5 h-[400px] lg:h-auto">
+<div class="bg-surface-container-lowest p-stack-sm rounded-xl custom-shadow border border-on-secondary-fixed h-full relative overflow-hidden flex flex-col">
+<div class="p-stack-sm flex justify-between items-center bg-surface-container-lowest z-10 border-b border-surface-variant">
+<span class="font-label-bold text-label-bold text-on-secondary-fixed flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">my_location</span>
+                            Pinpoint Location
+                        </span>
+</div>
+<div class="flex-grow relative bg-surface-variant" data-location="New York City">
+<img class="w-full h-full object-cover absolute inset-0" data-alt="A highly detailed overhead map view of a dense urban city block, rendered in a clean, modern vector style with light gray streets and pale blue water features. The aesthetic is professional and minimalist, suitable for a government or civic application interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCANTI0SinGiHEW7n2qVhqWA1f3C8hoFHPhyVBzPR-qND0DkcIrWgLVnO8dhhIF5OZGcB6bN99Gyh4hcdZiRvO0m_nPY64rYZZCVBQWiY8GI7HPV29MRB6ps24psgsMV14TJXvVReot8VAE43wpMj32TliE-HqI9ClY3IRYthD8KF0sb4WAZ5vqQ5OLU4_gnB-1wBiiruofbpU771I7GNfwx6Wily-SzbgG-KdEW_hoWjRb8T7bbMe_gg">
+<!-- Map Pin -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-20 flex flex-col items-center">
+<div class="w-12 h-12 bg-surface-container-lowest rounded-full shadow-lg flex items-center justify-center border-2 border-primary animate-bounce">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="w-2 h-2 bg-on-secondary-fixed/30 rounded-full mt-1 blur-[2px]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-on-secondary-fixed dark:bg-on-secondary-fixed full-width border-t border-on-secondary-fixed-variant mt-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop py-stack-lg w-full max-w-[1280px] mx-auto">
+<div class="col-span-1 md:col-span-4 flex justify-between items-center mb-stack-md">
+<div class="font-headline-md text-headline-md font-bold text-inverse-on-surface">Samadhan Setu</div>
+</div>
+<div class="flex flex-col gap-stack-sm">
+<a class="text-inverse-on-surface font-body-md hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">About Portal</a>
+<a class="text-inverse-on-surface font-body-md hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">Government Services</a>
+<a class="text-inverse-on-surface font-body-md hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">University Partners</a>
+<a class="text-inverse-on-surface font-body-md hover:text-primary transition-colors opacity-90 hover:opacity-100" href="#">Contact Support</a>
+</div>
+<div class="col-span-1 md:col-span-4 mt-stack-lg pt-stack-md border-t border-on-secondary-fixed-variant/50 text-tertiary-fixed-dim text-label-sm">
+                © 2024 Societal Innovation Collaboration Portal. All rights reserved.
+            </div>
+</div>
+</footer>
+
+
+</body></html>
