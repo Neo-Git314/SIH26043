@@ -1,190 +1,212 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Send, Image as ImageIcon, Sparkles, CheckCircle2, X } from 'lucide-react';
-import { JHARKHAND_DISTRICTS } from '../api/mockData';
+import React, { useState } from 'react'
 
-export default function SubmitIssue({ addComplaint, setView }) {
-  const navigate = useNavigate();
-  const [title, setTitle] = useState('');
-  const [district, setDistrict] = useState('d1');
-  const [districtName, setDistrictName] = useState('Ranchi');
-  const [description, setDescription] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [mediaUrls, setMediaUrls] = useState([]);
-  const [submitted, setSubmitted] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+function SubmitIssue({ addComplaint, setView }) {
+  const [title, setTitle] = useState('')
+  const [district, setDistrict] = useState('')
+  const [description, setDescription] = useState('')
+  const [pinLocation, setPinLocation] = useState({ x: 50, y: 50, label: 'Center Square (Downtown)' })
+  const [toastMessage, setToastMessage] = useState(null)
 
-  const handleAddImage = () => {
-    if (imageUrl.trim()) {
-      setMediaUrls((prev) => [...prev, imageUrl.trim()]);
-      setImageUrl('');
+  // Pre-seeded uploaded images that can be removed
+  const [media, setMedia] = useState([
+    {
+      id: 'img-1',
+      url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAR1cdcHieYaSAwgARlNTRkvt5BarXEJh05z0bPDXGem-giU-vAaybM5kb8eytTVdcvbspeqi0w_vlQXMuGVvRE6uBuCoKHdzHTBLY8qunUffXYZtBTi4YZGD6hTU9-frGeL8Vtp71gOkb3xGPMpOpJSxFg3Pbf72UMxk7yykF7ww3hqX-QrwMpJS34oe_5v4KC3tL8b62CR3XlsaT6qOrFZzv0haeaqmI5e8OPMLXE9cPSgQapd-d7aA',
+      desc: 'Pothole photo'
+    },
+    {
+      id: 'img-2',
+      url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRx6FMHN_2VGmyuPzXm3Oby8d8zkdINFfgyqJmXXTy_dGD6JsOf8fAM5ytOrL4gc0EApGOqHi-JAgBpClnG1GO-zOFqsddNT-lqSIrxhJq8wHUXW-b9mPpXoTjYYXKkHPsKlDvozArV7U7tWnSdBGAapoii62WzjcdZ48nLPP-EjR4Z6rwsqQq0D-UwUi26XIygDomzrWrJAPVAfYHszfpYJszthVcC7D2L13bcHZBLYR4Sxh4K-LHCw',
+      desc: 'Broken streetlight'
     }
-  };
+  ])
 
-  const handleRemoveImage = (index) => {
-    setMediaUrls((prev) => prev.filter((_, i) => i !== index));
-  };
+  // Handle map click to update pin location and set district
+  const handleMapClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+
+    let label = 'Custom Pin Location'
+    let autoDistrict = ''
+
+    if (x < 50 && y < 50) {
+      label = 'Northside Residential Zone'
+      autoDistrict = 'd2'
+    } else if (x >= 50 && y < 50) {
+      label = 'East End Shopping Center'
+      autoDistrict = 'd3'
+    } else if (x < 50 && y >= 50) {
+      label = 'West Valley Industrial Park'
+      autoDistrict = 'd4'
+    } else {
+      label = 'Downtown Central Avenue'
+      autoDistrict = 'd1'
+    }
+
+    setPinLocation({ x, y, label })
+    if (autoDistrict) {
+      setDistrict(autoDistrict)
+    }
+  }
+
+  // Delete uploaded file
+  const handleRemoveMedia = (id) => {
+    setMedia(media.filter(item => item.id !== id))
+  }
+
+  // Simulate file upload
+  const handleSimulateUpload = () => {
+    const mockImages = [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAR1cdcHieYaSAwgARlNTRkvt5BarXEJh05z0bPDXGem-giU-vAaybM5kb8eytTVdcvbspeqi0w_vlQXMuGVvRE6uBuCoKHdzHTBLY8qunUffXYZtBTi4YZGD6hTU9-frGeL8Vtp71gOkb3xGPMpOpJSxFg3Pbf72UMxk7yykF7ww3hqX-QrwMpJS34oe_5v4KC3tL8b62CR3XlsaT6qOrFZzv0haeaqmI5e8OPMLXE9cPSgQapd-d7aA',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBRx6FMHN_2VGmyuPzXm3Oby8d8zkdINFfgyqJmXXTy_dGD6JsOf8fAM5ytOrL4gc0EApGOqHi-JAgBpClnG1GO-zOFqsddNT-lqSIrxhJq8wHUXW-b9mPpXoTjYYXKkHPsKlDvozArV7U7tWnSdBGAapoii62WzjcdZ48nLPP-EjR4Z6rwsqQq0D-UwUi26XIygDomzrWrJAPVAfYHszfpYJszthVcC7D2L13bcHZBLYR4Sxh4K-LHCw'
+    ]
+    const randomUrl = mockImages[Math.floor(Math.random() * mockImages.length)]
+    
+    setMedia([
+      ...media,
+      {
+        id: `img-${Date.now()}`,
+        url: randomUrl,
+        desc: 'New uploaded image'
+      }
+    ])
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!title || !description) return;
+    e.preventDefault()
 
-    setIsSubmitting(true);
-    const payload = {
-      title,
-      district,
-      description,
-      mediaUrls,
-    };
-
-    if (addComplaint) {
-      await addComplaint(payload);
+    if (!title || !district || !description) {
+      alert('Please fill out all required fields.')
+      return
     }
 
-    setIsSubmitting(false);
-    setSubmitted(true);
+    const complaintData = {
+      title,
+      district,
+      description: `${description}\n\n[Location Pinned: ${pinLocation.label}]`,
+      mediaUrls: media.map(m => m.url)
+    }
 
-    setTimeout(() => {
-      if (typeof setView === 'function') {
-        setView('my-complaints');
-      }
-      navigate('/my-complaints');
-    }, 1200);
-  };
+    try {
+      await addComplaint(complaintData)
+      setToastMessage('Issue submitted successfully! Redirecting you to your complaints feed...')
+      
+      setTimeout(() => {
+        setToastMessage(null)
+        setView('my-complaints')
+      }, 2500)
+    } catch (error) {
+      alert('Error submitting issue: ' + error.message)
+    }
+  }
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] dot-grid">
-      <div className="max-w-3xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
-            Citizen Grievance Gateway
-          </div>
-          <h1 className="text-3xl font-extrabold text-[#0B1E36] font-geist">
-            Submit Civic Issue
-          </h1>
-          <p className="text-sm text-slate-600 mt-1">
-            Report local civic or infrastructure pain points across Jharkhand. Our AI pipeline categorizes and routes your issue to top university research teams.
-          </p>
+    <div className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg animate-fadeIn">
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-4 right-4 bg-[#e6f4ea] border-l-4 border-[#137333] text-[#137333] p-4 rounded shadow-lg z-50 animate-bounce flex items-center gap-2">
+          <span className="material-symbols-outlined icon-fill">check_circle</span>
+          <span className="font-semibold text-sm">{toastMessage}</span>
         </div>
+      )}
 
-        {submitted ? (
-          <div className="bg-white rounded-3xl border border-emerald-200 shadow-xl p-10 text-center space-y-4">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
-              <CheckCircle2 size={36} />
-            </div>
-            <h2 className="text-2xl font-bold text-[#0B1E36] font-geist">
-              Grievance Successfully Ingested!
-            </h2>
-            <p className="text-sm text-slate-600 max-w-md mx-auto">
-              Your ticket has been generated and dispatched to the automated AI categorization pipeline. Redirecting to My Grievances...
-            </p>
-          </div>
-        ) : (
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Header */}
+      <div className="mb-stack-lg border-b border-surface-variant pb-stack-md">
+        <h1 className="font-headline-xl text-headline-xl text-on-secondary-fixed mb-stack-sm font-bold">
+          Submit a New Civic Issue
+        </h1>
+        <p className="font-body-lg text-body-lg text-tertiary">
+          Please provide detailed information to help us address the issue efficiently.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
+        {/* Form Section */}
+        <div className="lg:col-span-7 space-y-stack-md">
+          <div className="bg-surface-container-lowest p-stack-lg rounded-xl custom-shadow border-t-4 border-t-primary border border-surface-variant">
+            <form onSubmit={handleSubmit} className="space-y-stack-md">
+              {/* Title */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                  Issue Title *
+                <label className="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm font-semibold" htmlFor="title">
+                  Issue Title <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Broken water pipeline causing road waterlogging"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-orange focus:ring-1 focus:ring-brand-orange"
+                  className="w-full bg-surface-container-lowest border border-surface-variant rounded px-4 py-3 text-body-md focus:border-on-secondary-fixed focus:ring-1 focus:ring-on-secondary-fixed transition-colors"
+                  id="title"
+                  placeholder="Brief summary of the issue (e.g. Broken Sprinkler, Streetlight Out)"
+                  type="text"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    District Code / Zone *
-                  </label>
-                  <select
-                    value={district}
-                    onChange={(e) => setDistrict(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-orange"
-                  >
-                    <option value="d1">District 1 (Ranchi / Central)</option>
-                    <option value="d2">District 2 (Dhanbad / East)</option>
-                    <option value="d3">District 3 (Jamshedpur / South)</option>
-                    <option value="d4">District 4 (Latehar / West)</option>
-                    <option value="d5">District 5 (Dumka / Santhal Pargana)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                    Jharkhand Administrative District
-                  </label>
-                  <select
-                    value={districtName}
-                    onChange={(e) => setDistrictName(e.target.value)}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-orange"
-                  >
-                    {JHARKHAND_DISTRICTS.map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              {/* District */}
+              <div>
+                <label className="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm font-semibold" htmlFor="district">
+                  District / Ward <span className="text-red-500">*</span>
+                </label>
+                <select
+                  required
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  className="w-full bg-surface-container-lowest border border-surface-variant rounded px-4 py-3 text-body-md focus:border-on-secondary-fixed focus:ring-1 focus:ring-on-secondary-fixed transition-colors"
+                  id="district"
+                >
+                  <option value="" disabled>Select the affected district</option>
+                  <option value="d1">District 1 - Downtown</option>
+                  <option value="d2">District 2 - Northside</option>
+                  <option value="d3">District 3 - East End</option>
+                  <option value="d4">District 4 - West Valley</option>
+                </select>
               </div>
 
+              {/* Description */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                  Detailed Description *
+                <label className="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm font-semibold" htmlFor="description">
+                  Detailed Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   required
-                  rows={4}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Provide complete details including street names, duration of the issue, and estimated impact on citizens..."
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-orange"
+                  className="w-full bg-surface-container-lowest border border-surface-variant rounded px-4 py-3 text-body-md focus:border-on-secondary-fixed focus:ring-1 focus:ring-on-secondary-fixed transition-colors resize-y"
+                  id="description"
+                  placeholder="Describe the issue, including specific location details, duration, and any hazards..."
+                  rows="5"
                 ></textarea>
               </div>
 
-              {/* Photo attachment via URL or Cloudinary */}
+              {/* Upload Zone */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                  Evidence Photo URL (Optional)
+                <label className="block font-label-bold text-label-bold text-on-secondary-fixed mb-stack-sm font-semibold">
+                  Supporting Media (Optional)
                 </label>
-                <div className="flex gap-2">
-                  <div className="relative flex-grow">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                      <ImageIcon size={16} />
-                    </div>
-                    <input
-                      type="url"
-                      value={imageUrl}
-                      onChange={(e) => setImageUrl(e.target.value)}
-                      placeholder="Paste image URL (https://...)"
-                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-orange"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleAddImage}
-                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition-colors"
-                  >
-                    Add Photo
-                  </button>
+                <div 
+                  onClick={handleSimulateUpload}
+                  className="border-2 border-dashed border-primary bg-primary-fixed-dim/20 rounded-xl p-6 text-center cursor-pointer hover:bg-primary-fixed-dim/30 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-primary text-4xl mb-2 block">cloud_upload</span>
+                  <p className="font-label-bold text-label-bold text-on-secondary-fixed">Click here to attach a photo</p>
+                  <p className="text-label-sm text-tertiary mt-1">Simulates local camera upload (Max 5MB)</p>
                 </div>
 
-                {mediaUrls.length > 0 && (
-                  <div className="flex flex-wrap gap-3 mt-3">
-                    {mediaUrls.map((url, idx) => (
-                      <div key={idx} className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-300 group">
-                        <img src={url} alt={`Evidence ${idx + 1}`} className="w-full h-full object-cover" />
+                {/* Thumbnails */}
+                {media.length > 0 && (
+                  <div className="flex gap-stack-sm mt-stack-md overflow-x-auto pb-2">
+                    {media.map((item) => (
+                      <div key={item.id} className="relative w-24 h-24 rounded-lg overflow-hidden border border-surface-variant group flex-shrink-0">
+                        <img src={item.url} alt={item.desc} className="w-full h-full object-cover" />
                         <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleRemoveMedia(item.id)
+                          }}
+                          className="absolute top-1 right-1 bg-surface-container-lowest rounded-full p-1 shadow-sm opacity-90 hover:opacity-100 transition-opacity"
                           type="button"
-                          onClick={() => handleRemoveImage(idx)}
-                          className="absolute top-1 right-1 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-80 hover:opacity-100"
                         >
-                          <X size={12} />
+                          <span className="material-symbols-outlined text-error text-[16px] font-bold">close</span>
                         </button>
                       </div>
                     ))}
@@ -192,31 +214,61 @@ export default function SubmitIssue({ addComplaint, setView }) {
                 )}
               </div>
 
-              {/* AI Badge */}
-              <div className="p-4 rounded-2xl bg-orange-50/80 border border-orange-200 text-xs text-brand-navy flex items-start gap-3">
-                <Sparkles size={20} className="text-brand-orange shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-bold">AI Vector Deduplication & Semantic Matching</p>
-                  <p className="text-slate-600 mt-0.5 leading-relaxed">
-                    This submission will be vectorized with Gemini text embeddings to verify non-duplication against existing reports within 5km, followed by research keyword alignment.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
+              {/* CTA */}
+              <div className="pt-stack-md">
                 <button
+                  className="w-full bg-primary text-on-primary py-4 rounded-xl font-headline-md text-headline-md shadow-md hover:bg-primary-container transition-colors active:scale-[0.98] font-bold"
                   type="submit"
-                  disabled={isSubmitting}
-                  className="flex items-center gap-2 px-8 py-3.5 rounded-xl text-sm font-bold text-white bg-brand-orange hover:bg-brand-terracotta-dark shadow-md shadow-brand-orange/20 transition-all disabled:opacity-60"
                 >
-                  <Send size={16} />
-                  {isSubmitting ? 'Submitting...' : 'Submit Grievance'}
+                  Submit Complaint
                 </button>
               </div>
             </form>
           </div>
-        )}
+        </div>
+
+        {/* Map Section */}
+        <div className="lg:col-span-5 h-[400px] lg:h-auto">
+          <div className="bg-surface-container-lowest p-stack-sm rounded-xl custom-shadow border border-on-secondary-fixed h-full relative overflow-hidden flex flex-col">
+            <div className="p-stack-sm flex justify-between items-center bg-surface-container-lowest z-10 border-b border-surface-variant p-3">
+              <span className="font-label-bold text-label-bold text-on-secondary-fixed flex items-center gap-2 font-semibold">
+                <span className="material-symbols-outlined text-primary icon-fill">my_location</span>
+                Pinpoint Location
+              </span>
+              <span className="text-xs text-tertiary font-medium">Click map to move pin</span>
+            </div>
+            
+            {/* Clickable Map area */}
+            <div
+              onClick={handleMapClick}
+              className="flex-grow relative bg-surface-variant cursor-crosshair overflow-hidden"
+              style={{ minHeight: '300px' }}
+            >
+              <img
+                className="w-full h-full object-cover absolute inset-0 select-none"
+                alt="Detailed city block vector map"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCANTI0SinGiHEW7n2qVhqWA1f3C8hoFHPhyVBzPR-qND0DkcIrWgLVnO8dhhIF5OZGcB6bN99Gyh4hcdZiRvO0m_nPY64rYZZCVBQWiY8GI7HPV29MRB6ps24psgsMV14TJXvVReot8VAE43wpMj32TliE-HqI9ClY3IRYthD8KF0sb4WAZ5vqQ5OLU4_gnB-1wBiiruofbpU771I7GNfwx6Wily-SzbgG-KdEW_hoWjRb8T7bbMe_gg"
+              />
+              
+              {/* Map Pin */}
+              <div
+                className="absolute z-20 flex flex-col items-center transition-all duration-300 pointer-events-none"
+                style={{ left: `${pinLocation.x}%`, top: `${pinLocation.y}%`, transform: 'translate(-50%, -100%)' }}
+              >
+                <div className="w-10 h-10 bg-surface-container-lowest rounded-full shadow-lg flex items-center justify-center border-2 border-primary animate-bounce">
+                  <span className="material-symbols-outlined text-primary text-2xl icon-fill">location_on</span>
+                </div>
+                <div className="w-2 h-2 bg-on-secondary-fixed/30 rounded-full mt-1 blur-[2px]"></div>
+              </div>
+            </div>
+            <div className="p-3 bg-surface-container text-xs text-on-secondary-fixed font-semibold">
+              Currently Pinned: <span className="text-primary font-bold">{pinLocation.label}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  );
+  )
 }
+
+export default SubmitIssue

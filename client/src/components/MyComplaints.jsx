@@ -1,154 +1,242 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { PlusCircle, Search, Clock, Image as ImageIcon } from 'lucide-react';
+import React, { useState } from 'react'
 
-export default function MyComplaints({ complaints = [], setView }) {
-  const [filterStatus, setFilterStatus] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
+function MyComplaints({ complaints, setView }) {
+  const [filter, setFilter] = useState('All')
+  const [selectedComplaint, setSelectedComplaint] = useState(null)
 
-  const statusStyles = {
-    Pending: 'bg-amber-100 text-amber-800 border-amber-200',
-    'In Progress': 'bg-blue-100 text-blue-800 border-blue-200',
-    Assigned: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-    Resolved: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  };
+  // Compute stats
+  const totalSubmitted = complaints.length
+  const inProgress = complaints.filter(c => c.status === 'In Progress' || c.status === 'Assigned').length
+  const resolved = complaints.filter(c => c.status === 'Resolved').length
 
-  const filtered = complaints.filter((item) => {
-    const matchesStatus = filterStatus === 'All' || item.status?.toLowerCase() === filterStatus.toLowerCase();
-    const matchesSearch =
-      item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.ticketId?.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesStatus && matchesSearch;
-  });
+  // Filter complaints
+  const filteredComplaints = complaints.filter(c => {
+    if (filter === 'All') return true
+    if (filter === 'Pending') return c.status === 'Pending'
+    if (filter === 'In Progress') return c.status === 'In Progress' || c.status === 'Assigned'
+    if (filter === 'Resolved') return c.status === 'Resolved'
+    return true
+  })
+
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case 'Pending':
+        return 'bg-primary-fixed text-on-primary-fixed-variant border-primary-fixed-dim'
+      case 'Assigned':
+      case 'In Progress':
+        return 'bg-secondary-fixed text-on-secondary-fixed-variant border-secondary-fixed-dim'
+      case 'Resolved':
+        return 'bg-[#e6f4ea] text-[#137333] border-[#ceead6]'
+      default:
+        return 'bg-surface-container text-on-surface'
+    }
+  }
+
+  const getIcon = (title) => {
+    const t = title.toLowerCase()
+    if (t.includes('pothole') || t.includes('road') || t.includes('street')) return 'add_road'
+    if (t.includes('water') || t.includes('leak') || t.includes('sprinkler')) return 'water_drop'
+    if (t.includes('light') || t.includes('power') || t.includes('electricity')) return 'lightbulb'
+    if (t.includes('tree') || t.includes('park') || t.includes('branch')) return 'park'
+    return 'assignment'
+  }
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] dot-grid">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg animate-fadeIn">
+      {/* Header Section */}
+      <div className="mb-stack-lg">
+        <h1 className="font-headline-xl text-headline-xl text-on-secondary-fixed mb-2">My Complaints</h1>
+        <p className="font-body-lg text-body-lg text-tertiary">Track the status and progress of your submitted civic issues.</p>
+      </div>
+
+      {/* Stats Bar Bento Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-margin-desktop">
+        {/* Stat 1 */}
+        <div className="bg-surface-container-lowest rounded-[2rem] card-shadow p-6 border border-surface-container-highest flex items-center justify-between">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-200">
-              Citizen Portal
-            </div>
-            <h1 className="text-3xl font-extrabold text-[#0B1E36] font-geist">
-              My Submitted Complaints & Issues
-            </h1>
-            <p className="text-sm text-slate-600 mt-1">
-              Live status tracking, ticket resolution updates, and media logs for your civic grievances.
-            </p>
+            <h3 className="font-label-bold text-label-bold text-on-secondary-fixed uppercase tracking-wider mb-2">Total Submitted</h3>
+            <div className="font-headline-xl text-headline-xl text-primary">{totalSubmitted}</div>
           </div>
-
-          <Link
-            to="/submit"
-            onClick={() => typeof setView === 'function' && setView('submit')}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-white bg-brand-orange hover:bg-brand-terracotta-dark shadow-md shadow-brand-orange/20 transition-all text-sm shrink-0"
-          >
-            <PlusCircle size={16} />
-            Report New Issue
-          </Link>
-        </div>
-
-        {/* Search & Filter Bar */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm mb-6 flex flex-col sm:flex-row gap-3 items-center justify-between">
-          <div className="relative w-full sm:w-80">
-            <Search size={16} className="absolute left-3.5 top-3 text-slate-400" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by ticket ID, title, or keyword..."
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-brand-orange"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
-            {['All', 'Pending', 'Assigned', 'In Progress', 'Resolved'].map((st) => (
-              <button
-                key={st}
-                onClick={() => setFilterStatus(st)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
-                  filterStatus === st
-                    ? 'bg-[#0B1E36] text-white shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {st}
-              </button>
-            ))}
+          <div className="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center border border-primary">
+            <span className="material-symbols-outlined text-primary text-[24px]">assignment</span>
           </div>
         </div>
+        {/* Stat 2 */}
+        <div className="bg-surface-container-lowest rounded-[2rem] card-shadow p-6 border border-surface-container-highest flex items-center justify-between">
+          <div>
+            <h3 className="font-label-bold text-label-bold text-on-secondary-fixed uppercase tracking-wider mb-2">In Progress</h3>
+            <div className="font-headline-xl text-headline-xl text-primary">{inProgress}</div>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center border border-primary">
+            <span className="material-symbols-outlined text-primary text-[24px]">engineering</span>
+          </div>
+        </div>
+        {/* Stat 3 */}
+        <div className="bg-surface-container-lowest rounded-[2rem] card-shadow p-6 border border-surface-container-highest flex items-center justify-between">
+          <div>
+            <h3 className="font-label-bold text-label-bold text-on-secondary-fixed uppercase tracking-wider mb-2">Resolved</h3>
+            <div className="font-headline-xl text-headline-xl text-primary">{resolved}</div>
+          </div>
+          <div className="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center border border-primary">
+            <span className="material-symbols-outlined text-primary text-[24px]">check_circle</span>
+          </div>
+        </div>
+      </div>
 
-        {/* Complaints Grid */}
-        {filtered.length === 0 ? (
-          <div className="bg-white rounded-3xl border border-slate-200 p-12 text-center shadow-sm">
-            <p className="text-base font-bold text-slate-700">No grievances found matching the criteria.</p>
-            <p className="text-xs text-slate-500 mt-1">Submit a new civic issue to begin tracking resolution.</p>
+      {/* Filters & Recent Activity Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-stack-md">
+        <h2 className="font-headline-md text-headline-md text-on-secondary-fixed">Recent Activity</h2>
+        <div className="flex flex-wrap gap-2">
+          {['All', 'Pending', 'In Progress', 'Resolved'].map(btn => (
+            <button
+              key={btn}
+              onClick={() => setFilter(btn)}
+              className={`px-4 py-1.5 rounded-full font-label-bold text-label-bold transition-all border ${
+                filter === btn
+                  ? 'bg-primary text-on-primary border-primary'
+                  : 'bg-surface-container-lowest border-surface-container-highest text-on-secondary-fixed hover:bg-surface-container'
+              }`}
+            >
+              {btn}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Vertical Feed of Complaint Cards */}
+      <div className="flex flex-col gap-stack-md">
+        {filteredComplaints.length === 0 ? (
+          <div className="bg-surface-container-lowest rounded-2xl border border-surface-container-highest p-12 text-center text-tertiary">
+            <span className="material-symbols-outlined text-5xl mb-2 text-surface-variant">inbox</span>
+            <p>No complaints found matching this status.</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {filtered.map((item, idx) => (
-              <div
-                key={item.ticketId || item._id || idx}
-                className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow p-6 sm:p-7"
-              >
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 mb-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-lg">
-                      {item.ticketId || `CIV-${idx + 100}`}
-                    </span>
-                    <span
-                      className={`text-xs font-bold uppercase px-3 py-1 rounded-full border ${
-                        statusStyles[item.status] || 'bg-slate-100 text-slate-800'
-                      }`}
-                    >
-                      {item.status || 'Pending'}
-                    </span>
-                    {item.district && (
-                      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
-                        Zone: {item.district.toUpperCase()}
+          filteredComplaints.map(item => (
+            <div
+              key={item.ticketId}
+              onClick={() => setSelectedComplaint(item)}
+              className="bg-surface-container-lowest rounded-2xl card-shadow border border-surface-container-highest overflow-hidden border-t-4 border-t-primary group hover:shadow-md transition-shadow cursor-pointer"
+            >
+              <div className="p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div className="flex items-start gap-4">
+                  {/* Icon */}
+                  <div className="w-10 h-10 shrink-0 rounded-full bg-primary-fixed flex items-center justify-center border border-primary mt-1">
+                    <span className="material-symbols-outlined text-primary icon-fill">{getIcon(item.title)}</span>
+                  </div>
+                  {/* Content */}
+                  <div>
+                    <div className="flex flex-wrap items-center gap-3 mb-1">
+                      <h3 className="font-headline-md text-headline-md text-on-secondary-fixed group-hover:text-primary transition-colors text-xl">
+                        {item.title}
+                      </h3>
+                      <span className={`px-3 py-0.5 rounded-full font-label-sm text-label-sm border ${getStatusStyle(item.status)}`}>
+                        {item.status}
                       </span>
-                    )}
-                  </div>
-                  <span className="text-xs text-slate-400 flex items-center gap-1">
-                    <Clock size={13} /> {item.date || 'Recent'}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-bold text-[#0B1E36] mb-2 font-geist">
-                  {item.title}
-                </h3>
-                <p className="text-slate-600 text-sm mb-4 leading-relaxed">
-                  {item.description}
-                </p>
-
-                {/* Attached Media */}
-                {item.mediaUrls && item.mediaUrls.length > 0 && (
-                  <div className="mb-4">
-                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                      <ImageIcon size={14} /> Attached Media Evidence
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      {item.mediaUrls.map((url, imgIdx) => (
-                        <div
-                          key={imgIdx}
-                          className="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 shadow-sm"
-                        >
-                          <img
-                            src={url}
-                            alt={`Complaint Media ${imgIdx + 1}`}
-                            className="w-full h-full object-cover hover:scale-110 transition-transform duration-300 cursor-pointer"
-                          />
-                        </div>
-                      ))}
                     </div>
+                    <p className="font-body-md text-body-md text-tertiary mb-2">
+                      Reported on {item.date} • ID: #{item.ticketId}
+                    </p>
+                    <p className="font-body-md text-body-md text-on-surface-variant line-clamp-1">
+                      {item.description}
+                    </p>
                   </div>
-                )}
+                </div>
+                {/* Action */}
+                <div className="shrink-0">
+                  <button className="font-label-bold text-label-bold text-on-secondary-fixed hover:text-primary flex items-center gap-1 border border-outline-variant px-4 py-2 rounded-full transition-colors group-hover:border-primary">
+                    View Details <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                  </button>
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))
         )}
       </div>
+
+      <div className="mt-stack-lg flex justify-center gap-4">
+        <button
+          onClick={() => setView('submit-issue')}
+          className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-bold hover:bg-primary-container shadow-md transition-colors"
+        >
+          Submit a New Issue
+        </button>
+      </div>
+
+      {/* Complaint Detail Modal */}
+      {selectedComplaint && (
+        <div className="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-surface-container-lowest max-w-2xl w-full rounded-2xl shadow-xl overflow-hidden border border-surface-container-highest animate-scaleUp">
+            {/* Header */}
+            <div className="bg-on-secondary-fixed p-6 text-inverse-on-surface flex justify-between items-start">
+              <div>
+                <span className="font-label-sm text-label-sm uppercase tracking-wider opacity-85">Ticket #{selectedComplaint.ticketId}</span>
+                <h3 className="text-2xl font-bold mt-1">{selectedComplaint.title}</h3>
+              </div>
+              <button
+                onClick={() => setSelectedComplaint(null)}
+                className="text-inverse-on-surface hover:text-primary-fixed transition-colors"
+              >
+                <span className="material-symbols-outlined text-2xl">close</span>
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+              <div className="flex justify-between items-center pb-4 border-b border-surface-variant">
+                <div>
+                  <h4 className="font-label-bold text-xs uppercase text-tertiary">Date Reported</h4>
+                  <p className="font-body-lg font-semibold text-on-secondary-fixed">{selectedComplaint.date}</p>
+                </div>
+                <div>
+                  <h4 className="font-label-bold text-xs uppercase text-tertiary">Current Status</h4>
+                  <span className={`inline-block px-3 py-1 mt-1 rounded-full font-label-sm text-label-sm border ${getStatusStyle(selectedComplaint.status)}`}>
+                    {selectedComplaint.status}
+                  </span>
+                </div>
+                <div>
+                  <h4 className="font-label-bold text-xs uppercase text-tertiary">District / Ward</h4>
+                  <p className="font-body-lg font-semibold text-on-secondary-fixed">
+                    {selectedComplaint.district === 'd1' ? 'District 1 - Downtown' :
+                     selectedComplaint.district === 'd2' ? 'District 2 - Northside' :
+                     selectedComplaint.district === 'd3' ? 'District 3 - East End' :
+                     selectedComplaint.district === 'd4' ? 'District 4 - West Valley' : 'Unassigned'}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-label-bold text-xs uppercase text-tertiary mb-2">Description</h4>
+                <p className="text-on-surface-variant whitespace-pre-wrap">{selectedComplaint.description}</p>
+              </div>
+
+              {selectedComplaint.mediaUrls && selectedComplaint.mediaUrls.length > 0 && (
+                <div>
+                  <h4 className="font-label-bold text-xs uppercase text-tertiary mb-3">Supporting Media</h4>
+                  <div className="flex gap-4 overflow-x-auto pb-2">
+                    {selectedComplaint.mediaUrls.map((url, i) => (
+                      <div key={url || i} className="w-48 h-32 rounded-lg overflow-hidden border border-surface-variant shrink-0">
+                        <img src={url} alt="Attached Evidence" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="bg-surface-container p-4 flex justify-end">
+              <button
+                onClick={() => setSelectedComplaint(null)}
+                className="px-6 py-2 bg-on-secondary-fixed text-inverse-on-surface rounded-full font-label-bold hover:bg-[#002147] transition-all"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  );
+  )
 }
+
+export default MyComplaints

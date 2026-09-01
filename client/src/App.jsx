@@ -14,6 +14,7 @@ import UnauthorizedPage from './pages/UnauthorizedPage';
 import SubmitIssue from './components/SubmitIssue';
 import MyComplaints from './components/MyComplaints';
 import Challenges from './components/Challenges';
+import UniversityChallenges from './pages/university/UniversityChallenges';
 import Workspace from './components/Workspace';
 
 // Frontend C (Admin Analytics Dashboard)
@@ -277,7 +278,7 @@ function AppContent() {
             path="/university/challenges"
             element={
               <ProtectedRoute allowedRoles={['university', 'admin']}>
-                <Challenges challenges={challenges} acceptChallenge={acceptChallenge} setView={() => {}} />
+                <UniversityChallenges challenges={challenges} acceptChallenge={acceptChallenge} setView={() => {}} />
               </ProtectedRoute>
             }
           />

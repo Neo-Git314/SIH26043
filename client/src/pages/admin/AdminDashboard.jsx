@@ -1,176 +1,274 @@
-import React, { useState } from 'react';
-import { ShieldCheck, Users, Building2, CheckCircle2, AlertCircle } from 'lucide-react';
-import { JHARKHAND_DISTRICTS } from '../../api/mockData';
+import React, { useState, useMemo } from 'react';
+import {
+  mockAnalyticsSummary,
+  mockAnalyticsTrends,
+  mockUsers,
+} from '../../mocks/mockData';
+import StatMetricCard from '../../components/admin/StatMetricCard';
+import CategoryBarChart from '../../components/admin/CategoryBarChart';
+import StatusDonutChart from '../../components/admin/StatusDonutChart';
+import TrendsLineChart from '../../components/admin/TrendsLineChart';
+import DistrictOverview from '../../components/admin/DistrictOverview';
 
 export default function AdminDashboard() {
-  const [selectedDistrict, setSelectedDistrict] = useState('All');
+  const adminUser = mockUsers.find((u) => u.role === 'admin') || {
+    name: 'Admin User',
+    organization: 'Dept of Higher Education, Jharkhand',
+  };
 
-  const stats = [
-    { label: 'Total Ingested Grievances', value: '1,428', change: '+18% this month', icon: AlertCircle, color: 'text-brand-orange', bg: 'bg-orange-50' },
-    { label: 'AI Matched Challenges', value: '384', change: 'Across 14 Universities', icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { label: 'Industry & CSR Capital', value: '₹4.8 Cr', change: '85 Partners Engaged', icon: Building2, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: 'Resolved Civic Solutions', value: '942', change: '96.2% Citizen Rating', icon: CheckCircle2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  ];
+  const [timeRange, setTimeRange] = useState('30d');
+  const [selectedDistrictFilter, setSelectedDistrictFilter] = useState('all');
 
-  const categories = [
-    { name: 'Water Resources & Fluoride Removal', count: 384, percentage: 27 },
-    { name: 'Agriculture & Cold Storage Solutions', count: 312, percentage: 22 },
-    { name: 'Rural Energy & Solar Microgrids', count: 256, percentage: 18 },
-    { name: 'Healthcare Infrastructure & Tele-clinics', count: 198, percentage: 14 },
-    { name: 'Urban Mobility & Traffic Optimization', count: 178, percentage: 12 },
-    { name: 'Waste Reclamation & Mining Ecology', count: 100, percentage: 7 },
-  ];
+  // Compute dynamic filtered analytics based on District Scope and Time Range
+  const filteredAnalytics = useMemo(() => {
+    const isAllDistricts = selectedDistrictFilter === 'all';
 
-  const recentRegistries = [
-    { id: 'CIV-2024-883', title: 'Pothole on Main Street & Drainage Overflow', district: 'Ranchi', domain: 'Urban Mobility', status: 'Pending', confidence: '98%' },
-    { id: 'CIV-2024-855', title: 'Fluoride and Arsenic Contamination in Tubewell', district: 'Latehar', domain: 'Water Resources', status: 'In Progress', confidence: '96%' },
-    { id: 'CIV-2024-812', title: 'Solar Inverter Failure at Rural Primary Health Centre', district: 'Gumla', domain: 'Rural Energy', status: 'Assigned', confidence: '94%' },
-    { id: 'CIV-2024-745', title: 'Decentralized Micro-Cold Storage Need for Mango Farmers', district: 'Khunti', domain: 'Agriculture', status: 'Resolved', confidence: '92%' },
-  ];
+    // 1. Calculate District Factor & Target Counts
+    const districtEntry = mockAnalyticsSummary.byDistrict.find(
+      (d) => d.district === selectedDistrictFilter
+    );
+    const districtCount = districtEntry ? districtEntry.count : mockAnalyticsSummary.totalComplaints;
+    const districtFactor = isAllDistricts ? 1 : districtCount / mockAnalyticsSummary.totalComplaints;
+
+    // 2. Dynamic Time Range Slicing
+    let trendData = [...mockAnalyticsTrends];
+    if (timeRange === '7d') {
+      trendData = trendData.slice(-7);
+    } else if (timeRange === 'All Time') {
+      // Extended historical projection
+      trendData = [
+        { date: '2026-01-15', count: 2 },
+        { date: '2026-01-20', count: 4 },
+        { date: '2026-01-25', count: 6 },
+        ...mockAnalyticsTrends,
+      ];
+    }
+
+    // Scale trends if district is selected
+    if (!isAllDistricts) {
+      trendData = trendData.map((t) => ({
+        ...t,
+        count: Math.max(1, Math.round(t.count * districtFactor)),
+      }));
+    }
+
+    // 3. Dynamic Category Breakdown
+    const categoryData = mockAnalyticsSummary.byCategory.map((cat) => {
+      if (isAllDistricts) return cat;
+      return {
+        ...cat,
+        count: Math.max(1, Math.round(cat.count * districtFactor)),
+      };
+    });
+
+    // 4. Dynamic Status Breakdown
+    const statusData = mockAnalyticsSummary.byStatus.map((st) => {
+      if (isAllDistricts) return st;
+      return {
+        ...st,
+        count: Math.max(1, Math.round(st.count * districtFactor)),
+      };
+    });
+
+    // 5. Dynamic KPIs
+    const totalComplaints = isAllDistricts
+      ? mockAnalyticsSummary.totalComplaints
+      : districtCount;
+
+    const participatingUniversities = isAllDistricts
+      ? mockAnalyticsSummary.totalUniversitiesParticipating
+      : selectedDistrictFilter === 'Ranchi'
+      ? 3
+      : selectedDistrictFilter === 'Jamshedpur'
+      ? 2
+      : 1;
+
+    const industryPartners = isAllDistricts
+      ? mockAnalyticsSummary.totalIndustryPartnersEngaged
+      : selectedDistrictFilter === 'Ranchi'
+      ? 3
+      : 2;
+
+    const projectsCompleted = isAllDistricts
+      ? mockAnalyticsSummary.totalProjectsCompleted
+      : Math.max(1, Math.round(mockAnalyticsSummary.totalProjectsCompleted * districtFactor));
+
+    return {
+      totalComplaints,
+      participatingUniversities,
+      industryPartners,
+      projectsCompleted,
+      categoryData,
+      statusData,
+      trendData,
+      byDistrict: mockAnalyticsSummary.byDistrict,
+    };
+  }, [selectedDistrictFilter, timeRange]);
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 bg-[#F7F9FC] dot-grid">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-bold uppercase tracking-wider mb-2 border border-purple-200">
-              <ShieldCheck size={15} />
-              State Innovation Command Center
+    <div className="min-h-screen bg-slate-50 text-slate-800 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
+        {/* Top Header Card / Admin Profile Bar - EGovt Midnight Navy & Civic Orange */}
+        <div className="bg-gradient-to-r from-[#0B1E3D] via-[#122B56] to-[#0B1E3D] text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden border border-[#1E3A68]">
+          <div className="absolute right-0 top-0 w-96 h-96 bg-[#FF4D24]/15 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="px-3 py-1 bg-[#FF4D24]/20 text-[#FF7A00] text-xs font-extrabold rounded-full border border-[#FF4D24]/30 shadow-sm">
+                  🛡️ State Oversight & Governance Portal
+                </span>
+                <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-bold rounded-full border border-emerald-400/30 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Sync Active
+                </span>
+              </div>
+
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                Administration Dashboard
+              </h1>
+
+              <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+                State-level civic grievance monitoring, AI categorization diagnostics, and university R&D collaboration analytics for Jharkhand.
+              </p>
             </div>
-            <h1 className="text-3xl font-extrabold text-[#0B1E36] font-geist">
-              Jharkhand Societal Innovation Analytics (Frontend C)
-            </h1>
-            <p className="text-sm text-slate-600 mt-1">
-              Unified governance console monitoring civic grievance ingestion, AI classification, academic R&D matching, and CSR funds.
-            </p>
+
+            {/* Admin Profile Details */}
+            <div className="bg-[#071328]/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 text-xs space-y-1.5 w-full md:w-auto flex-shrink-0 shadow-lg">
+              <div className="text-slate-300 font-bold uppercase tracking-wider text-[11px]">
+                Authorized Administrator
+              </div>
+              <div className="font-extrabold text-white text-sm">
+                {adminUser.name}
+              </div>
+              <p className="text-[11px] text-slate-300">
+                {adminUser.organization}
+              </p>
+              <div className="pt-1 flex items-center gap-2">
+                <span className="px-2.5 py-0.5 bg-[#FF4D24] text-white rounded text-[10px] font-extrabold shadow-sm">
+                  ROLE: ADMIN
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Filter Toolbar */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-3.5 shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-[#0B1E3D] uppercase tracking-wider text-[11px]">
+              Analytics Window:
+            </span>
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl">
+              {['7d', '30d', 'All Time'].map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setTimeRange(r)}
+                  className={`px-3.5 py-1.5 rounded-lg font-bold transition-all ${
+                    timeRange === r
+                      ? 'bg-[#FF4D24] text-white shadow-md shadow-orange-500/25'
+                      : 'text-slate-600 hover:text-[#0B1E3D]'
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex items-center gap-2">
+            <span className="text-[#0B1E3D] font-bold uppercase tracking-wider text-[11px]">
+              District Scope:
+            </span>
             <select
-              value={selectedDistrict}
-              onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="px-4 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold shadow-sm focus:outline-none focus:border-brand-orange"
+              value={selectedDistrictFilter}
+              onChange={(e) => setSelectedDistrictFilter(e.target.value)}
+              className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-[#0B1E3D] font-bold focus:outline-none focus:ring-2 focus:ring-[#FF4D24]/20 focus:border-[#FF4D24] transition-colors"
             >
-              <option value="All">All 24 Districts</option>
-              {JHARKHAND_DISTRICTS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
+              <option value="all">All Jharkhand Districts (148 Total)</option>
+              {mockAnalyticsSummary.byDistrict.map((d) => (
+                <option key={d.district} value={d.district}>
+                  {d.district} District ({d.count} Complaints)
                 </option>
               ))}
             </select>
-          </div>
-        </div>
-
-        {/* KPI Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stats.map((item, idx) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={idx}
-                className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 flex flex-col justify-between"
+            {selectedDistrictFilter !== 'all' && (
+              <button
+                type="button"
+                onClick={() => setSelectedDistrictFilter('all')}
+                className="text-xs text-[#FF4D24] hover:text-[#E63900] font-bold px-2 py-1 hover:bg-orange-50 rounded transition-colors"
               >
-                <div className="flex justify-between items-start mb-3">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{item.label}</span>
-                  <div className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center`}>
-                    <Icon size={20} className={item.color} />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-3xl font-black text-[#0B1E36] font-geist">{item.value}</p>
-                  <p className="text-[11px] text-slate-500 mt-1 font-semibold">{item.change}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Breakdown by Domain */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8">
-          <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-6">
-            <div>
-              <h3 className="text-lg font-bold text-[#0B1E36] font-geist">
-                Grievance Distribution by Gemini AI Domain
-              </h3>
-              <p className="text-xs text-slate-500">
-                Automated multi-label categorization across 10 Jharkhand civic domains
-              </p>
-            </div>
-            <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full font-bold w-fit">
-              AI Pipeline: 99.4% Accuracy
-            </span>
-          </div>
-
-          <div className="space-y-4">
-            {categories.map((c, idx) => (
-              <div key={idx} className="space-y-1.5 text-xs">
-                <div className="flex justify-between font-semibold">
-                  <span className="text-slate-800">{c.name}</span>
-                  <span className="text-slate-900 font-bold">{c.count} ({c.percentage}%)</span>
-                </div>
-                <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-brand-orange to-brand-terracotta rounded-full transition-all duration-700"
-                    style={{ width: `${c.percentage * 3.2}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
+                Reset Scope
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Live Ingestion Feed Table */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-            <div>
-              <h3 className="text-lg font-bold text-[#0B1E36] font-geist">
-                Recent Ingested Grievance Registry
-              </h3>
-              <p className="text-xs text-slate-500">Real-time status updates across district nodal centers</p>
-            </div>
-          </div>
+        {/* Four Primary PRD KPI Cards (Dynamic to Selected District & Time) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatMetricCard
+            title="Total Complaints"
+            value={filteredAnalytics.totalComplaints}
+            subtitle={
+              selectedDistrictFilter === 'all'
+                ? 'Across 10 civic categories'
+                : `Active in ${selectedDistrictFilter}`
+            }
+            icon="📋"
+            badgeText={selectedDistrictFilter === 'all' ? 'State Total' : `${selectedDistrictFilter} Hotspot`}
+            badgeColor="text-[#FF4D24] bg-orange-50 border-orange-200"
+            accentColor="text-[#0B1E3D]"
+          />
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
-                <tr>
-                  <th className="p-4">Ticket</th>
-                  <th className="p-4">Issue Description</th>
-                  <th className="p-4">District</th>
-                  <th className="p-4">AI Domain</th>
-                  <th className="p-4">Confidence</th>
-                  <th className="p-4">Resolution Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {recentRegistries.map((r, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="p-4 font-mono font-bold text-slate-700">{r.id}</td>
-                    <td className="p-4 font-bold text-slate-900">{r.title}</td>
-                    <td className="p-4 text-slate-600 font-medium">{r.district}</td>
-                    <td className="p-4 font-semibold text-indigo-700">{r.domain}</td>
-                    <td className="p-4 font-bold text-emerald-600">{r.confidence}</td>
-                    <td className="p-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase ${
-                          r.status === 'Pending'
-                            ? 'bg-amber-100 text-amber-800'
-                            : r.status === 'In Progress'
-                            ? 'bg-blue-100 text-blue-800'
-                            : r.status === 'Assigned'
-                            ? 'bg-indigo-100 text-indigo-800'
-                            : 'bg-emerald-100 text-emerald-800'
-                        }`}
-                      >
-                        {r.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <StatMetricCard
+            title="Participating Universities"
+            value={filteredAnalytics.participatingUniversities}
+            subtitle={
+              selectedDistrictFilter === 'all'
+                ? 'BIT Mesra, NIT Jamshedpur...'
+                : `Assigned to ${selectedDistrictFilter}`
+            }
+            icon="🏛️"
+            badgeText="Active R&D"
+            badgeColor="text-purple-700 bg-purple-50 border-purple-200"
+            accentColor="text-[#0B1E3D]"
+          />
+
+          <StatMetricCard
+            title="Industry Partners Engaged"
+            value={filteredAnalytics.industryPartners}
+            subtitle="Startups, MSMEs & CSR"
+            icon="🏢"
+            badgeText="Collaborating"
+            badgeColor="text-blue-700 bg-blue-50 border-blue-200"
+            accentColor="text-[#0B1E3D]"
+          />
+
+          <StatMetricCard
+            title="Projects Completed"
+            value={filteredAnalytics.projectsCompleted}
+            subtitle="Field verified resolutions"
+            icon="✅"
+            badgeText="Delivered"
+            badgeColor="text-emerald-700 bg-emerald-50 border-emerald-200"
+            accentColor="text-emerald-600"
+          />
+        </div>
+
+        {/* Analytics Visualizations Grid (2x2 Layout optimized for 1366x768) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* 1. Complaints by Category (Bar Chart) */}
+          <CategoryBarChart data={filteredAnalytics.categoryData} />
+
+          {/* 2. Complaints by Status (Donut / Pie Chart) */}
+          <StatusDonutChart data={filteredAnalytics.statusData} />
+
+          {/* 3. Complaint Submission Trends (Line / Area Chart) */}
+          <TrendsLineChart data={filteredAnalytics.trendData} />
+
+          {/* 4. District Overview (Ranked Breakdown & Chart) */}
+          <DistrictOverview data={filteredAnalytics.byDistrict} />
         </div>
       </div>
     </div>
